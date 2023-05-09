@@ -10,4 +10,8 @@ interface MainNavigationController {
 
     fun goToSplash()
 
+    fun goToHome()
+
+    fun goToSearch()
+
 }

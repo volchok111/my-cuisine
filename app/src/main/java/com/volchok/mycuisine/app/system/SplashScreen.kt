@@ -6,14 +6,24 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.volchok.mycuisine.app.presentation.SplashViewModel
+import org.koin.androidx.compose.getViewModel
 
+//TODO add splash screen implementation
 @Composable
 fun SplashScreen() {
+    getViewModel<SplashViewModel>()
+
+    SplashScreenImpl()
+}
+
+@Composable
+fun SplashScreenImpl() {
     Box(
         modifier = Modifier
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Test")
+        Text(text = "Splash Screen")
     }
 }

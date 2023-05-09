@@ -2,6 +2,8 @@ package com.volchok.mycuisine.app.system
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -13,9 +15,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.volchok.mycuisine.app.model.BackNavigationEvent
 import com.volchok.mycuisine.app.model.ForwardNavigationEvent
-import com.volchok.mycuisine.app.model.PopUpNavigationEvent
 import com.volchok.mycuisine.app.model.Route
 import com.volchok.mycuisine.app.presentation.MainViewModel
+import com.volchok.mycuisine.feature.home.system.HomeScreen
+import com.volchok.mycuisine.feature.search.system.SearchScreen
+import com.volchok.mycuisine.library.ui.CuisineBottomBar
 import com.volchok.mycuisine.ui.theme.MyCuisineTheme
 import org.koin.androidx.compose.getViewModel
 
@@ -23,30 +27,46 @@ import org.koin.androidx.compose.getViewModel
 fun MainScreen() {
     val viewModel = getViewModel<MainViewModel>()
 
-    MainScreenImpl(viewModel = viewModel)
+    MainScreenImpl(
+        viewModel = viewModel,
+        viewModel::onHome,
+        viewModel::onSearch
+    )
 }
 
 @Composable
 fun MainScreenImpl(
     viewModel: MainViewModel,
+    onHome: () -> Unit,
+    onSearch: () -> Unit,
 ) {
     MyCuisineTheme {
         val navController = rememberNavController()
-        NavigationEffect(
-            navController = navController,
-            viewModel = viewModel,
-            onNavigationEventConsumed = viewModel::onNavigationEventConsumed
-        )
 
-        Column(
-            modifier = Modifier
-                //.background()
-                .fillMaxSize()
+        Scaffold(
+            bottomBar = {
+                CuisineBottomBar(
+                    onHome = { onHome() },
+                    onSearch = { onSearch() }
+                )
+            }
         ) {
-            Screens(
-                navController = navController,
-                modifier = Modifier.weight(1f)
-            )
+            Column(
+                modifier = Modifier
+                    //.background()
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
+                NavigationEffect(
+                    navController = navController,
+                    viewModel = viewModel,
+                    onNavigationEventConsumed = viewModel::onNavigationEventConsumed
+                )
+                Screens(
+                    navController = navController,
+                    modifier = Modifier.weight(1f),
+                )
+            }
         }
     }
 }
@@ -54,15 +74,20 @@ fun MainScreenImpl(
 @Composable
 private fun Screens(
     navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
+    modifier: Modifier = Modifier,
+
+    ) {
+
     NavHost(
         navController = navController,
         startDestination = Route.Initial(),
         modifier = modifier
     ) {
-        composable(Route.Splash()) { SplashScreen() }
+       // composable(Route.Splash()) { SplashScreen() }
+        composable(Route.Home()) { HomeScreen() }
+        composable(Route.Search()) { SearchScreen() }
     }
+
 }
 
 @Composable
@@ -80,12 +105,6 @@ private fun NavigationEffect(
                 navController.navigateUp()
                 onNavigationEventConsumed()
             }
-            is PopUpNavigationEvent -> {
-                if (navController.currentDestination?.route != navigationEvent.route()) {
-                    navController.popBackStack(navigationEvent.route(), navigationEvent.inclusive)
-                }
-                onNavigationEventConsumed()
-            }
             is ForwardNavigationEvent -> {
                 if (navController.currentDestination?.route != navigationEvent.route()) {
                     var navOptions = prepareNavOptions(navigationEvent)
@@ -95,6 +114,7 @@ private fun NavigationEffect(
                 }
             }
             null -> Unit
+            else -> {}
         }
     }
 }
