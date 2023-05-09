@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.MyCuisine" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:statusBarColor">#8da059</item>
+        <item name="android:background">#eeefe9</item>
     </style>
 </resources>
