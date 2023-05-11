@@ -24,6 +24,7 @@ object CuisineColors {
     val green200 = Color(0xffd4e0b2)
     val green300 = Color(0xff8da059)
     val green400 = Color(0xff33520c)
+    val green500 = Color(0xff192618)
 
     val darkBrown = Color(0xffbd9c66)
     val lightBrown = Color(0xffe5d9b3)
