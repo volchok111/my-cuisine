@@ -9,5 +9,7 @@ import kotlinx.coroutines.flow.flow
 class ObserveRecipesUseCase(
     private val repository: RemoteRepository
 ) : SuspendUseCase<Unit, Flow<Data<RecipeEntity>>> {
-    override suspend fun invoke(input: Unit): Flow<Data<RecipeEntity>> = flow { repository.getRecipes() }
+    override suspend fun invoke(input: Unit): Flow<Data<RecipeEntity>> = flow {
+        emit(repository.getRecipes())
+    }
 }
